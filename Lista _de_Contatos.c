@@ -77,3 +77,68 @@ void DeletarNumero(Contatos tabela[]){
 
 }
 
+void imprimircontato(Contatos pessoa){
+    printf("Nome: %s", pessoa.nome);
+    printf("\tTelefone: %d", pessoa.tell);
+    printf("\tE-mail:%s \n ", pessoa.email );
+}
+
+void Listar(Contatos tabela[]){
+    int i;
+    for (i=0;i<TAM;i++)
+    {
+        printf("%d\n", i);
+        if (tabela[i].tell != 0)
+        {
+            imprimircontato(tabela[i]);
+        }
+        printf("\n");
+    }
+}
+
+void Arquivar(Contatos tabela[]){
+    int i;
+    FILE *arq;
+    arq = fopen("Lista_de_Contato.txt", "w");
+    for (i = 0; i < TAM; i++)
+    {
+        if (tabela[i].tell !=0)
+        {
+            fprintf(arq, "Nome: %s\n" , tabela[i].nome);
+            fprintf(arq, "Numero: %d\n", tabela[i].tell);
+            fprintf(arq, "Email: %s\n", tabela[i].email);
+        }
+    }
+    fclose(arq);
+}
+
+void lerarquivo(Contatos tabela[]){
+    Contatos p;
+    FILE* arq;
+    arq=fopen("Lista_de_Contato.txt", "r");
+        if (arq == NULL)
+        {
+            printf("Voce ainda nao usou nosso programa\n");
+            exit(1);            
+        }
+    char nome[50];
+    int telefone;
+    char email[50];
+    while (!feof(arq))
+    {
+        if (arq)
+        {
+            fscanf(arq, "Nome: %s\nNumero: %d\nEmail: %s\n", nome, &telefone, email);
+            p.tell = telefone;
+            strcpy(p.nome, nome);
+            strcpy(p.email, email); 
+            int id = hash(p.tell);
+            while (tabela[id].tell != 0)
+            {
+                id = hash(id+1);
+            }
+            tabela[id] = p;
+        }
+    }
+    fclose(arq);
+}
